@@ -1,0 +1,127 @@
+<project name="j2eedemo" default="package">
+
+
+	<!---
+
+
+		
+		1. Compile Java Source Code. The output would be .class files.
+		2. Create a Jar file than bundles the .class files.
+		3. Copy the web files into the build folder.
+		4. Create a pacakge which is a zip file with Jar files and web files. 
+		5. compile the Junit test cases
+		6. Run the Junit Test cases
+		7. Use properties file in ANT 
+
+		Best Practices :
+		
+		1. Create all the intermediate folders that are generated during your build process to be inside a build folder.
+		2. "clean up" your previous build output and start your build. Clean has to be the first target in the build process.
+		
+	-->
+
+	
+	<property name="dist.location" value="C:\Users\KRRao\antpro\javacode\result"/>
+	<property file="build.properties"/>
+	
+	 <path id="testclasspath">
+      
+      <pathelement location="build/classes"/>
+	  <pathelement location="lib/junit.jar"/>
+    </path>
+	
+	<target name="clean">
+		
+		<!-- This target is to clean up the build content before the actual build starts -->
+		
+		<delete dir="build"/>
+		<delete dir="${dist.location}"/>
+	
+	</target>
+	
+	<target name="init" depends="clean">
+	
+		<mkdir dir="build"/>
+		<mkdir dir="build/classes"/>
+		<mkdir dir="build/jar"/>
+		<mkdir dir="build/web"/>
+		<mkdir dir="build/test-classes"/>
+		<mkdir dir="${dist.location}"/>
+	
+	</target>
+	
+	
+	<target name="compile-java-source" depends="init">
+	
+		<javac srcdir="src/java" destdir="build/classes" classpath="lib/search.jar"/>
+	
+	</target>
+	
+	
+	<target name="create-jar" depends="compile-java-source">
+	
+		  <jar destfile="build/jar/app-${appversion}.jar" basedir="build/classes"/>
+	
+	</target>
+	
+	<target name="copy-web-files">
+	
+		 <copy todir="build/web">
+			<fileset dir="src/web"/>
+		</copy>
+	
+	</target>
+	
+	<target name="package" depends="create-jar,copy-web-files">
+	
+		 <zip destfile="${dist.location}/app-${appversion}.zip">
+			<fileset dir="build/jar"/>
+			<fileset dir="build/web"/>
+		</zip>
+	
+	</target>
+	<target name="compile-junits">
+		<mkdir dir="build/test-classes"/>
+		<!--javac srcdir="test" destdir="build/test-classes">
+		
+			<classpath>
+				<pathelement path="build/classes"/>
+				<pathelement path="lib\junit.jar"/>
+			</classpath>
+		
+		
+		</javac-->
+		
+		<javac srcdir="test" destdir="build/test-classes" classpathref="testclasspath"/>
+				
+		
+	</target>
+	
+	<target name="run-junits" depends="compile-junits">
+	
+		<mkdir dir="build/test-results"/>
+		<junit printsummary="yes" haltonfailure="no">
+		  <classpath>
+			<pathelement location="build/classes"/>
+			<pathelement location="lib/junit.jar"/>
+			<pathelement location="build/test-classes"/>
+		  </classpath>
+
+	  
+
+	   <batchtest fork="yes" todir="build/test-results">
+		<fileset dir="build/test-classes">
+		
+	  
+
+
+		</fileset>
+		<formatter type="xml"/>
+	  </batchtest>
+	</junit>
+	
+	</target>
+
+
+
+</project>
