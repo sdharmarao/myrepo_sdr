@@ -42,6 +42,7 @@
 	<target name="init" depends="clean">
 	
 		<mkdir dir="build"/>
+		<mkdir dir="test"/>
 		<mkdir dir="build/classes"/>
 		<mkdir dir="build/jar"/>
 		<mkdir dir="build/web"/>
