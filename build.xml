@@ -21,7 +21,7 @@
 	-->
 
 	
-	<property name="dist.location" value="C:\Users\KRRao\antpro\javacode\result"/>
+	<property name="dist.location" value="/Users/sdharmarao/ANT/connectfour\javacode\result"/>
 	<property file="build.properties"/>
 	
 	 <path id="testclasspath">
